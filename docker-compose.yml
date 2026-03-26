@@ -1,0 +1,28 @@
+services:
+  global-db:
+    image: postgres:17-alpine
+    container_name: global-db
+    restart: always
+    environment:
+      POSTGRES_USER: ${PGUSER}
+      POSTGRES_PASSWORD: ${PGPASSWORD}
+      POSTGRES_DB: ${PGDATABASE}
+    ports:
+      - "5432:5432"
+    volumes:
+      - global_db_data:/var/lib/postgresql/data
+    networks:
+      - harco_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${PGUSER} -d ${PGDATABASE}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  harco_network:
+    name: harco_network  # Nombre explícito para que otros proyectos lo encuentren
+    external: true
+
+volumes:
+  global_db_data:
