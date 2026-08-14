@@ -1,6 +1,7 @@
 services:
   global-db:
-    image: postgres:17-alpine
+    # Cambiamos a la imagen oficial de pgvector basada en Postgres 17
+    image: pgvector/pgvector:pg17
     container_name: global-db
     restart: always
     environment:
@@ -14,6 +15,7 @@ services:
     networks:
       - harco_network
     healthcheck:
+      # El healthcheck sigue siendo el mismo, funciona igual
       test: ["CMD-SHELL", "pg_isready -U ${PGUSER} -d ${PGDATABASE}"]
       interval: 10s
       timeout: 5s
@@ -21,7 +23,7 @@ services:
 
 networks:
   harco_network:
-    name: harco_network  # Nombre explícito para que otros proyectos lo encuentren
+    name: harco_network
     external: true
 
 volumes:
